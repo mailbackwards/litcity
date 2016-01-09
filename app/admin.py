@@ -9,6 +9,6 @@ class LocationInlineAdmin(admin.TabularInline):
     model = Location
 
 class BookAdmin(admin.ModelAdmin):
-    inlines = [QuoteInlineAdmin, LocationInlineAdmin]
+    inlines = [LocationInlineAdmin, QuoteInlineAdmin]
 
 admin.site.register(Book, BookAdmin)

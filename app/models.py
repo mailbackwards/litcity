@@ -10,9 +10,11 @@ class Book(models.Model):
 class Quote(models.Model):
     book = models.ForeignKey(Book)
     text = models.TextField()
+    approved = models.BooleanField(default=True)
 
 class Location(models.Model):
     book = models.ForeignKey(Book)
     label = models.CharField(max_length=64, unique=True)
     lat = models.FloatField()
     lon = models.FloatField()
+    approved = models.BooleanField(default=False)
