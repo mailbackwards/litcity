@@ -25,10 +25,13 @@ def update_location(request):
                 user_lon, user_lat, loc['lon'], loc['lat'])
             all_locations = Location.objects.select_related('book').prefetch_related('book__quote_set', 'quotes')
             def get_quote(location):
-                try:
-                    return random.choice(location.quotes.all()).text
-                except IndexError:
-                    return random.choice(location.book.quote_set.all()).text
+                if location.quotes.all():
+                    q = random.choice(location.quotes.all())
+                elif location.book.quote_set.all():
+                    q = random.choice(location.book.quote_set.all())
+                else:
+                    q = None
+                return q.text if q is not None else ''
             results = [{
                 'lat': location.lat,
                 'lon': location.lon,
