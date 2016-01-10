@@ -37,3 +37,11 @@ To run the scripts that add data:
 
 `import_locations` takes a CSV file with (label, latitude, longitude) columns.
 `get_top_quotes` requires the title of a Goodreads book.
+
+### Contributors
+
+- Liam Andrew ([mailbackwards](http://github.com/mailbackwards))
+- Helen Bailey ([hakbailey](http://github.com/hakbailey))
+- Phil Polefrone ([prpole](http://github.com/prpole))
+- Olimpia Estela ([olimpiaestela](http://github.com/olimpiaestela))
+- Navraj Narula ([navierula](http://github.com/navierula))
