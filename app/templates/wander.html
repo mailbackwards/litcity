@@ -104,15 +104,13 @@
                     });
                     google.maps.event.addListener(m, 'mouseover', (function(m){
                         return function() {
-                            var content = '<strong>'+m.title+'</strong><br/><em>'+m.bookTitle+' - '+m.bookAuthor+'</em><br/>'+m.quote
-                            infoWindow.setContent(content);
-                            infoWindow.open(map, m);
                          }
                     })(m));
                     google.maps.event.addListener(m, 'click', (function(m){
                         return function() {
-                            // Add link fun stuff that happens with marker is clicked!
-                            console.log(m.title);
+                            var content = '<strong>'+m.title+'</strong><br/><em>'+m.bookTitle+' - '+m.bookAuthor+'</em><br/>'+m.quote
+                            infoWindow.setContent(content);
+                            infoWindow.open(map, m);
                          }
                     })(m));
                     markers.push(m);
