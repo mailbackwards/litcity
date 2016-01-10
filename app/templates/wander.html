@@ -95,12 +95,12 @@
                     var m = new google.maps.Marker({
                         position:pos,
                         map:map,
-                        title:label
+                        title:label,
+                        quote:quote
                     });
                     google.maps.event.addListener(m, 'mouseover', (function(m){
                         return function() {
-                            var content = quote;
-                            infoWindow.setContent(content);
+                            infoWindow.setContent('<strong>'+m.title+'</strong><br/>'+m.quote);
                             infoWindow.open(map, m);
                          }
                     })(m));
