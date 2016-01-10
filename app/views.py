@@ -1,3 +1,4 @@
+import random
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -7,6 +8,10 @@ from app.models import Location
 
 # Create your views here.
 @csrf_exempt
+def wander_view(request):
+    return render(request, 'wander.html')
+
+@csrf_exempt
 def home_view(request):
     return render(request, 'home.html')
 
@@ -15,24 +20,24 @@ def update_location(request):
     if request.method == 'POST':
         if 'coords' in request.POST:
             coordinates = request.POST['coords']
-            lat, lon = coordinates.split(',')
-            all_locations = Location.objects.all()
-            distances = []
-            for location in all_locations:
-                distance = haversine(
-                    float(lon),
-                    float(lat),
-                    location.lon,
-                    location.lat)
-                json_location = {
-                    'lat': location.lat,
-                    'lon': location.lon,
-                    'label': location.label,
-                    'book': location.book.name,
-                    'quotes': list(location.book.quote_set.values_list('text', flat=True))
-                }
-                distances.append([distance, json_location])
-            distances = sorted(distances, key=lambda x: x[0])
+            user_lat, user_lon = [float(i) for i in coordinates.split(',')]
+            distance_from_origin = lambda loc: haversine(
+                user_lon, user_lat, loc['lon'], loc['lat'])
+            all_locations = Location.objects.select_related('book').prefetch_related('book__quote_set', 'quotes')
+            def get_quote(location):
+                try:
+                    return random.choice(location.quotes.all()).text
+                except IndexError:
+                    return random.choice(location.book.quote_set.all()).text
+            results = [{
+                'lat': location.lat,
+                'lon': location.lon,
+                'label': location.label,
+                'book': location.book.name,
+                'author': location.book.author,
+                'quote': get_quote(location)
+            } for location in all_locations]
+            sorted_results = sorted(results, key=distance_from_origin)[:5]
 
-            return JsonResponse({'distances': [i[1] for i in distances[:5]]})
+            return JsonResponse({'results': sorted_results})
     return HttpResponse('FAIL!!!!!')
