@@ -23,12 +23,12 @@ def update_location(request):
             user_lat, user_lon = [float(i) for i in coordinates.split(',')]
             distance_from_origin = lambda loc: haversine(
                 user_lon, user_lat, loc['lon'], loc['lat'])
-            all_locations = Location.objects.select_related('book').prefetch_related('book__quote_set', 'quotes')
+            all_locations = Location.objects.filter(approved=True).select_related('book').prefetch_related('book__quote_set', 'quotes')
             def get_quote(location):
-                if location.quotes.all():
-                    q = random.choice(location.quotes.all())
-                elif location.book.quote_set.all():
-                    q = random.choice(location.book.quote_set.all())
+                if location.quotes.filter(approved=True):
+                    q = random.choice(location.quotes.filter(approved=True))
+                elif location.book.quote_set.filter(approved=True):
+                    q = random.choice(location.book.quote_set.filter(approved=True))
                 else:
                     q = None
                 return q.text if q is not None else ''
