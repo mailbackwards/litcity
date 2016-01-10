@@ -7,10 +7,16 @@ class Book(models.Model):
     name = models.CharField(max_length=128)
     author = models.CharField(max_length=128, blank=True)
 
+    def __unicode__(self):
+        return self.name
+
 class Quote(models.Model):
     book = models.ForeignKey(Book)
     text = models.TextField()
     approved = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return self.text[:140]
 
 class Location(models.Model):
     book = models.ForeignKey(Book)
@@ -18,3 +24,6 @@ class Location(models.Model):
     lat = models.FloatField()
     lon = models.FloatField()
     approved = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.label
