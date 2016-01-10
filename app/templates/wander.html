@@ -92,15 +92,20 @@
                     pos = new google.maps.LatLng(lat, lon);
                     var label = points[i]['label'];
                     var quote = points[i]['quote'];
+                    var bookTitle = points[i]['book'];
+                    var bookAuthor = points[i]['author']
                     var m = new google.maps.Marker({
                         position:pos,
                         map:map,
                         title:label,
-                        quote:quote
+                        quote:quote,
+                        bookTitle:bookTitle,
+                        bookAuthor:bookAuthor
                     });
                     google.maps.event.addListener(m, 'mouseover', (function(m){
                         return function() {
-                            infoWindow.setContent('<strong>'+m.title+'</strong><br/>'+m.quote);
+                            var content = '<strong>'+m.title+'</strong><br/><em>'+m.bookTitle+' - '+m.bookAuthor+'</em><br/>'+m.quote
+                            infoWindow.setContent(content);
                             infoWindow.open(map, m);
                          }
                     })(m));
