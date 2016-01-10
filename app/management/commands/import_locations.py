@@ -11,10 +11,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         book_id = options['book_id']
-        book, created = Book.objects.get(pk=book_id)
-        with open(options['csv'], 'r') as f:
+        book = Book.objects.get(pk=book_id)
+        with open(options['csv_file'], 'r') as f:
             reader = csv.reader(f, lineterminator='\n')
-            for row in reader:
-                label, lat, lon = reader
+            for i, row in enumerate(reader):
+                if i == 0:
+                    continue
+                label, lat, lon = row[0].encode('utf-8'), float(row[1]), float(row[2])
+                print 'Creating location %s' % label
                 location, created = Location.objects.get_or_create(
-                    lat=lat, lon=lon, label=label, book=book_id)
+                    lat=lat, lon=lon, label=label, book_id=book_id)
