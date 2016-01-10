@@ -61,21 +61,24 @@ def loclookup(locations):
 
     return coordinates.items()
 
+
 def write_coords(coords,textname):
     with open(textname+'_locations.csv','w') as f:
         cwrite = csv.writer(f)
         cwrite.writerow(['name','latitude','longitude'])
-        for x in coords[0]:
+        for x in coords:
             cwrite.writerow([x[0],x[1][0],x[1][1]])
-
 
 fname = input('Input filename')
 
 with open(fname,'r') as f:
-    text = f.read()
+    text = f.read().decode('utf-8',errors='ignore')
 
 tokens = nltk.tokenize.word_tokenize(text)
 tagged = loctag(tokens)
 lookup = loclookup(tagged)
-write_coords(lookup,fname)
+
+print lookup
+
+write_coords(lookup,fname[:-4])
 
