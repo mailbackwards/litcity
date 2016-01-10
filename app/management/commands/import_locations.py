@@ -19,4 +19,4 @@ class Command(BaseCommand):
                 label, lat, lon = row[0].encode('utf-8'), float(row[1]), float(row[2])
                 print 'Creating location %s' % label
                 location, created = Location.objects.get_or_create(
-                    lat=lat, lon=lon, label=label, book_id=book_id)
+                    label=label, defaults={'lat': lat, 'lon': lon, 'book_id': book_id})
