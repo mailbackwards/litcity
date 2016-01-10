@@ -40,7 +40,7 @@ def update_location(request):
                 'author': location.book.author,
                 'quote': get_quote(location)
             } for location in all_locations]
-            sorted_results = sorted(results, key=distance_from_origin)[:5]
+            sorted_results = sorted(results, key=distance_from_origin)
 
             return JsonResponse({'results': sorted_results})
     return HttpResponse('FAIL!!!!!')
