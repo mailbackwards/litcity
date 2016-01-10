@@ -48,7 +48,12 @@
             }
 
             map = new google.maps.Map(document.getElementById('map'), mapOptions);
-            var marker = new google.maps.Marker({position:latlon,map:map,title:"You are here!"});
+            var marker = new google.maps.Marker({
+                position:latlon,
+                map:map,
+                title:"You are here!",
+                icon: {path: google.maps.SymbolPath.CIRCLE, scale: 6}
+            });
             infoWindow = new google.maps.InfoWindow();
         }
 
@@ -85,6 +90,7 @@
         function updateLocation(lat, lon) {
             var data = {'coords': lat + "," + lon};
             $.post('/update_location', data, function(response){
+
                 var points = response.results;
                 for (i in points) {
                     var lat = points[i]['lat'];
@@ -108,7 +114,7 @@
                     })(m));
                     google.maps.event.addListener(m, 'click', (function(m){
                         return function() {
-                            var content = '<strong>'+m.title+'</strong><br/><em>'+m.bookTitle+' - '+m.bookAuthor+'</em><br/>'+m.quote
+                            var content = '<strong>'+m.title+'</strong><br/><em>'+m.bookTitle+' - '+m.bookAuthor+'</em><br/>'+m.quote;
                             infoWindow.setContent(content);
                             infoWindow.open(map, m);
                          }
