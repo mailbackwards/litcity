@@ -21,8 +21,8 @@ def update_location(request):
         if 'coords' in request.POST:
             coordinates = request.POST['coords']
             user_lat, user_lon = [float(i) for i in coordinates.split(',')]
-            distance_from_origin = lambda loc: haversine(
-                user_lon, user_lat, loc['lon'], loc['lat'])
+            # distance_from_origin = lambda loc: haversine(
+            #     user_lon, user_lat, loc['lon'], loc['lat'])
             all_locations = Location.objects.filter(approved=True).select_related('book').prefetch_related('book__quote_set', 'quotes')
             def get_quote(location):
                 if location.quotes.filter(approved=True):
@@ -40,7 +40,7 @@ def update_location(request):
                 'author': location.book.author,
                 'quote': get_quote(location)
             } for location in all_locations]
-            sorted_results = sorted(results, key=distance_from_origin)
+            # results = sorted(results, key=distance_from_origin)
 
-            return JsonResponse({'results': sorted_results})
+            return JsonResponse({'results': results})
     return HttpResponse('FAIL!!!!!')

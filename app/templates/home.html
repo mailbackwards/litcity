@@ -2,6 +2,6 @@
 {% load static from staticfiles %}
 
 {% block body %}
-    <p>Hello</p>
-    <button type="button"><a href="{% url 'wander_page' %}">Wander</a></button>
+    <img src="{% static 'img/litcity-logo-salmon.png' %}" width="250" alt="LitCity logo">
+    <p><button class="btn" type="button" onclick="location.href='{% url "wander_page" %}'">Wander</button></p>
 {% endblock %}
