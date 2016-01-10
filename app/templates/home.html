@@ -100,7 +100,8 @@
         function updateLocation(lat, lon) {
             var data = {'coords': lat + "," + lon};
             $.post('/update_location', data, function(response){
-                if(response != 'success'){ console.log('Error! :('); }
+                console.log(response.distances);
+                // HERE: populate the views with fun things
             });
         }
     })
