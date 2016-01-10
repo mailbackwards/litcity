@@ -37,6 +37,8 @@
         var map;
         var text = document.getElementById("text");
         var y;
+        var markers = [];
+        var infoWindow;
 
         detectBrowser();
         getLocation();
@@ -57,7 +59,7 @@
             var latlon = new google.maps.LatLng(lat, lon);
 
             var mapOptions = {
-                center:latlon,zoom:14,
+                center:latlon,zoom:7,
                 mapTypeId:google.maps.MapTypeId.ROADMAP,
                 mapTypeControl:false,
                 navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL}
@@ -65,6 +67,7 @@
 
             map = new google.maps.Map(document.getElementById('map'), mapOptions);
             var marker = new google.maps.Marker({position:latlon,map:map,title:"You are here!"});
+            infoWindow = new google.maps.InfoWindow();
         }
 
         function detectBrowser() {
@@ -100,8 +103,33 @@
         function updateLocation(lat, lon) {
             var data = {'coords': lat + "," + lon};
             $.post('/update_location', data, function(response){
-                console.log(response.distances);
-                // HERE: populate the views with fun things
+                var points = response.distances;
+                for (i in points) {
+                    var lat = points[i]['lat'];
+                    var lon = points[i]['lon'];
+                    pos = new google.maps.LatLng(lat, lon);
+                    var label = points[i]['label'];
+                    var quote = points[i]['quotes'][0];
+                    var m = new google.maps.Marker({
+                        position:pos,
+                        map:map,
+                        title:label
+                    });
+                    google.maps.event.addListener(m, 'mouseover', (function(m){
+                        return function() {
+                            var content = quote;
+                            infoWindow.setContent(content);
+                            infoWindow.open(map, m);
+                         }
+                    })(m));
+                    google.maps.event.addListener(m, 'click', (function(m){
+                        return function() {
+                            // Add link fun stuff that happens with marker is clicked!
+                            console.log(m.title);
+                         }
+                    })(m));
+                    markers.push(m);
+                }
             });
         }
     })
