@@ -23,7 +23,7 @@ class Location(models.Model):
     label = models.CharField(max_length=64, unique=True)
     lat = models.FloatField()
     lon = models.FloatField()
-    quotes = models.ManyToManyField(Quote, related_name='locations')
+    quotes = models.ManyToManyField(Quote, related_name='locations', blank=True)
     approved = models.BooleanField(default=False)
 
     def __unicode__(self):
