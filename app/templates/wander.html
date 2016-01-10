@@ -3,8 +3,8 @@
 
 {% block body %}
     <body>
-        <div id="map" style="height:600px"></div>
-        <div id="text"></div>
+        <div id="map" style="height:400px"></div>
+        <div id="text"><img src="{% static "images/test.png" %}" id="pic" width="600px" /></div>
         <script async defer
           src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaFIdtdCCgrHuTM4NDJL8hLPVdG60hWIc&callback=initMap">
         </script>
@@ -41,7 +41,7 @@
             var latlon = new google.maps.LatLng(lat, lon);
 
             var mapOptions = {
-                center:latlon,zoom:7,
+                center:latlon,zoom:13,
                 mapTypeId:google.maps.MapTypeId.ROADMAP,
                 mapTypeControl:false,
                 navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL}
@@ -52,7 +52,7 @@
                 position:latlon,
                 map:map,
                 title:"You are here!",
-                icon: {path: google.maps.SymbolPath.CIRCLE, scale: 6}
+                icon: {path: google.maps.SymbolPath.CIRCLE, fillColor: '#6C3B78', fillOpacity: 1.0, strokeColor: '#6C3B78', scale: 4}
             });
             infoWindow = new google.maps.InfoWindow();
         }
@@ -60,13 +60,16 @@
         function detectBrowser() {
             var useragent = navigator.userAgent;
             var mapdiv = document.getElementById("map");
+            var pic = document.getElementById("pic");
 
             if (useragent.indexOf('iPhone') != -1 || useragent.indexOf('Android') != -1 ) {
                 mapdiv.style.width = '100%';
-                mapdiv.style.height = '100%';
+                mapdiv.style.height = '63%';
+                pic.style.width = '100%';
             } else {
                 mapdiv.style.width = '600px';
-                mapdiv.style.height = '800px';
+                mapdiv.style.height = '480px';
+                pic.style.width = '600px;'
             }
         }
 
@@ -106,12 +109,9 @@
                         title:label,
                         quote:quote,
                         bookTitle:bookTitle,
-                        bookAuthor:bookAuthor
+                        bookAuthor:bookAuthor,
+                        icon: {path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW, fillColor: '#6C3B78', fillOpacity: 1.0, strokeColor: '#EE6969', scale: 4, strokeWeight: 3}
                     });
-                    google.maps.event.addListener(m, 'mouseover', (function(m){
-                        return function() {
-                         }
-                    })(m));
                     google.maps.event.addListener(m, 'click', (function(m){
                         return function() {
                             var content = '<strong>'+m.title+'</strong><br/><em>'+m.bookTitle+' - '+m.bookAuthor+'</em><br/>'+m.quote;
@@ -121,6 +121,7 @@
                     })(m));
                     markers.push(m);
                 }
+                console.log(markers);
             });
         }
     })
