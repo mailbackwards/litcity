@@ -20,4 +20,5 @@ from app.views import *
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', home_view, name='home_page'),
+    url(r'^update_location$', update_location, name='update_location'),
 ]

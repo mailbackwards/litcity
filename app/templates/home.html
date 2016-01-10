@@ -6,7 +6,7 @@
     <title>{% block title %}LitCity{% endblock %}</title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no" />
 
     <!-- Google Webfonts -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600|PT+Serif:400,400italic' rel='stylesheet' type='text/css'>
@@ -23,11 +23,85 @@
 </head>
 
 <body>
-    <p>Hello world</p>
+    <div id="map" style="height:600px"></div>
+    <div id="text"></div>
+
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaFIdtdCCgrHuTM4NDJL8hLPVdG60hWIc&callback=initMap">
+    </script>
 </body>
 
 <script type="text/javascript">
     $(document).ready(function() {
-        console.log('hi');
+        var URL = "{% url 'update_location' %}";
+        var map;
+        var text = document.getElementById("text");
+        var y;
+
+        detectBrowser();
+        getLocation();
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(initMap, showError);
+            } else {
+                text.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function initMap(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            updateLocation(lat, lon);
+
+            var latlon = new google.maps.LatLng(lat, lon);
+
+            var mapOptions = {
+                center:latlon,zoom:14,
+                mapTypeId:google.maps.MapTypeId.ROADMAP,
+                mapTypeControl:false,
+                navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL}
+            }
+
+            map = new google.maps.Map(document.getElementById('map'), mapOptions);
+            var marker = new google.maps.Marker({position:latlon,map:map,title:"You are here!"});
+        }
+
+        function detectBrowser() {
+            var useragent = navigator.userAgent;
+            var mapdiv = document.getElementById("map");
+
+            if (useragent.indexOf('iPhone') != -1 || useragent.indexOf('Android') != -1 ) {
+                mapdiv.style.width = '100%';
+                mapdiv.style.height = '100%';
+            } else {
+                mapdiv.style.width = '600px';
+                mapdiv.style.height = '800px';
+            }
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    x.innerHTML = "User denied the request for Geolocation."
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    x.innerHTML = "Location information is unavailable."
+                    break;
+                case error.TIMEOUT:
+                    x.innerHTML = "The request to get user location timed out."
+                    break;
+                case error.UNKNOWN_ERROR:
+                    x.innerHTML = "An unknown error occurred."
+                    break;
+            }
+        }
+
+        function updateLocation(lat, lon) {
+            var data = {'coords': lat + "," + lon};
+            $.post('/update_location', data, function(response){
+                if(response != 'success'){ console.log('Error! :('); }
+            });
+        }
     })
 </script>
